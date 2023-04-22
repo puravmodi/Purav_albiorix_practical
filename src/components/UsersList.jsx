@@ -95,10 +95,18 @@ const UsersList = () => {
               {filteredUsers?.length > 0 ? (
                 filteredUsers?.map((user) => (
                   <tr key={user.id}>
-                    <td className="px-4 py-2 border">{user.name}</td>
-                    <td className="px-4 py-2 border ">{user.email}</td>
-                    <td className="px-4 py-2 border">{user.mobile}</td>
-                    <td className="px-4 py-2 border">{user.dob}</td>
+                    <td className="px-4 py-2 border">
+                      <div className="min-w-[100px]">{user.name}</div>
+                    </td>
+                    <td className="px-4 py-2 border ">
+                      <div className="min-w-[100px]">{user.email}</div>
+                    </td>
+                    <td className="px-4 py-2 border">
+                      <div className="min-w-[100px]">{user.mobile}</div>
+                    </td>
+                    <td className="px-4 py-2 border">
+                      <div className="min-w-[100px]">{user.dob}</div>
+                    </td>
                     <td className="px-4 py-2 border">
                       <div className="flex flex-row justify-center gap-8">
                         <button
