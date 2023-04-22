@@ -1,21 +1,60 @@
 import { useForm } from "react-hook-form";
 import React from "react";
 import { AiFillWarning } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser, editUser } from "../features/userSlice";
 
-export default function AddOrEdit({ onClose }) {
+export default function AddOrEdit({ onClose, user }) {
+  const dispatch = useDispatch();
+  const { users } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: user?.name || "",
+      email: user?.email || "",
+      mobile: user?.mobile || "",
+      dob: user?.dob || "",
+    },
+  });
 
   const onSubmit = (data) => {
-    console.log("data", data);
-  };
+    const emailExists = users.find((user) => user.email === data.email);
+    if (emailExists && !user?.id) {
+      setError("email", {
+        type: "email_exists",
+        message: "Email already exists",
+      });
+      return;
+    }
+    user && user.id
+      ? dispatch(
+          editUser({
+            user: {
+              ...data,
+              id: user.id,
+            },
+          })
+        )
+      : dispatch(
+          addUser({
+            user: {
+              ...data,
+              timestamp: new Date().toISOString(),
+              id: crypto.randomUUID(),
+            },
+          })
+        );
 
+    onClose();
+  };
+console.log(errors)
   return (
-    <div className="w-[500px]">
-      <h1>Add Or Edit</h1>
+    <div className="w-full md:w-[500px]">
+      <h1 className="text-3xl font-bold text-center py-8">Add Or Edit</h1>
 
       <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
         <div>
@@ -65,7 +104,14 @@ export default function AddOrEdit({ onClose }) {
             className="w-full border h-10"
             {...register("mobile", {
               required: "Mobile is required!",
-              maxLength: 10,
+              maxLength: {
+                value: 10,
+                message: "Invalid mobile number"
+              },
+              minLength:{
+                value:10,
+                message: "Invalid mobile number"
+              },
             })}
           />
           {errors.mobile && (
@@ -97,12 +143,12 @@ export default function AddOrEdit({ onClose }) {
         <div className="flex flex-row gap-4 justify-end">
           <button
             type="button"
-            className="bg-gray-500 px-4 py-2"
+            className="bg-gray-300 px-4 py-2"
             onClick={onClose}
           >
             Discard
           </button>
-          <button type="submit" className="bg-blue-300 text-white px-4 py-2">
+          <button type="submit" className="bg-[#4274BA] text-white px-4 py-2">
             Save
           </button>
         </div>

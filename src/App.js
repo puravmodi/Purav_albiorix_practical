@@ -3,7 +3,7 @@ import UsersList from "./components/UsersList";
 
 function App() {
   return (
-    <div className="App px-8">
+    <div className="App mx-4">
       <UsersList />
     </div>
   );
